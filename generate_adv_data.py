@@ -62,21 +62,21 @@ def test(net, testloader, adv=False):
             else:
                 outputs, inputs_adv = net(inputs, targets)
 
-            loss = criterion(outputs, targets)
-            prec1, prec5 = utils.accuracy(outputs.data, targets, topk=(1, 5))
+            #loss = criterion(outputs, targets)
+            #prec1, prec5 = utils.accuracy(outputs.data, targets, topk=(1, 5))
 
-            num = inputs.size(0)
-            losses.update(loss.clone().item(), num)
-            top1.update(prec1.clone().item(), num)
-            top5.update(prec5.clone().item(), num)
+            #num = inputs.size(0)
+            #losses.update(loss.clone().item(), num)
+            #top1.update(prec1.clone().item(), num)
+            #top5.update(prec5.clone().item(), num)
             
-            if batch_idx % cfg.report_freq == 0 and rank == 0:
-                logger.info(
-                    'Test: [{0}/{1}]\t'
-		    'Loss: {loss.val:.4f} ({loss.avg:.4f})\t'
-		    'Prec@1: {top1.val:.3f} ({top1.avg:.3f})\t'
-		    'Prec@5: {top5.val:.3f} ({top5.avg:.3f})\t'
-                    .format(batch_idx, len(testloader), loss=losses, top1=top1, top5=top5))
+            #if batch_idx % cfg.report_freq == 0 and rank == 0:
+            #    logger.info(
+            #        'Test: [{0}/{1}]\t'
+		    #'Loss: {loss.val:.4f} ({loss.avg:.4f})\t'
+		    #'Prec@1: {top1.val:.3f} ({top1.avg:.3f})\t'
+		    #'Prec@5: {top5.val:.3f} ({top5.avg:.3f})\t'
+            #        .format(batch_idx, len(testloader), loss=losses, top1=top1, top5=top5))
 
     final_loss_sum = torch.Tensor([losses.sum]).cuda()
     final_top1_sum = torch.Tensor([top1.sum]).cuda()
