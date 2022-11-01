@@ -78,22 +78,22 @@ def test(net, testloader, adv=False):
 		    #'Prec@5: {top5.val:.3f} ({top5.avg:.3f})\t'
             #        .format(batch_idx, len(testloader), loss=losses, top1=top1, top5=top5))
 
-    final_loss_sum = torch.Tensor([losses.sum]).cuda()
-    final_top1_sum = torch.Tensor([top1.sum]).cuda()
-    final_top5_sum = torch.Tensor([top5.sum]).cuda()
-    total_num = torch.Tensor([losses.count]).cuda()
-    if args.distributed:
-        torch.distributed.all_reduce(final_loss_sum)
-        torch.distributed.all_reduce(final_top1_sum)
-        torch.distributed.all_reduce(final_top5_sum)
-        torch.distributed.all_reduce(total_num)
-    final_loss = final_loss_sum.item() / total_num.item()
-    final_top1 = final_top1_sum.item() / total_num.item()
-    final_top5 = final_top5_sum.item() / total_num.item()
+    #final_loss_sum = torch.Tensor([losses.sum]).cuda()
+    #final_top1_sum = torch.Tensor([top1.sum]).cuda()
+    #final_top5_sum = torch.Tensor([top5.sum]).cuda()
+    #total_num = torch.Tensor([losses.count]).cuda()
+    #if args.distributed:
+    #    torch.distributed.all_reduce(final_loss_sum)
+    #    torch.distributed.all_reduce(final_top1_sum)
+    #    torch.distributed.all_reduce(final_top5_sum)
+    #    torch.distributed.all_reduce(total_num)
+    #final_loss = final_loss_sum.item() / total_num.item()
+    #final_top1 = final_top1_sum.item() / total_num.item()
+    #final_top5 = final_top5_sum.item() / total_num.item()
 
-    logger.info(' * Prec@1 {:.3f}\tPrec@5 {:.3f}\tLoss {:.3f}\t'.format(final_top1, final_top5, final_loss))
+    #logger.info(' * Prec@1 {:.3f}\tPrec@5 {:.3f}\tLoss {:.3f}\t'.format(final_top1, final_top5, final_loss))
 
-    return final_top1
+    #return final_top1
 
 def test_architecture(arch_code, test_loader):
 
