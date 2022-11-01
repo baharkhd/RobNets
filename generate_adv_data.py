@@ -36,10 +36,10 @@ bin_archs_path = 'outputs/binary_architectures.npy'
 archs = np.load(archs_path)
 bin_archs = np.load(bin_archs_path)
 
-print(archs.shape, bin_archs.shape)
-print(archs[0])
-print()
-print(bin_archs[0])
+#print(archs.shape, bin_archs.shape)
+#print(archs[0])
+#print()
+#print(bin_archs[0])
 
 def test_architecture(arch_code, test_loader):
 
