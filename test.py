@@ -46,5 +46,16 @@ torch.cuda.manual_seed(cfg.seed)
 print('==> Building model..')
 arch_code = eval('architecture_code.{}'.format(cfg.model))
 net = models.model_entry(cfg, arch_code)
-print(net.type)
-print(net)
+
+archs_path = 'outputs/architectures.npy'
+bin_archs_path = 'outputs/binary_architectures.npy'
+
+archs = np.load(archs_path)
+bin_archs = np.load(bin_archs_path).tolist()
+
+print(bin_archs[0])
+print(type(bin_archs[0]), type(bin_archs[0][0]))
+print()
+arch_code = eval('architecture_code.{}'.format(cfg.model))
+print(arch_code)
+print(type(arch_code))
