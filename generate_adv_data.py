@@ -57,15 +57,10 @@ def test(net, testloader, adv=False):
             inputs, targets = inputs.cuda(), targets.cuda()
 
             # here I think we should calculate the FSP of different cells
-            print("11111")
             if not adv:
-                print("22222")
                 outputs = net(inputs)
-                print("33333")
             else:
-                print("44444")
                 outputs, inputs_adv = net(inputs, targets)
-                print("55555")
 
             #loss = criterion(outputs, targets)
             #prec1, prec5 = utils.accuracy(outputs.data, targets, topk=(1, 5))
