@@ -42,11 +42,14 @@ print()
 print(bin_archs[0])
 
 def test_architecture(arch_code, test_loader):
+
     arch_code = eval(arch_code)
     net = models.model_entry(cfg, arch_code)
     rank = 0
     world_size = 1
     net = net.cuda()
+    print("------", arch_code)
+    print()
 
     net_adv = AttackPGD(net, cfg.attack_param)
 
