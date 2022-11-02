@@ -116,6 +116,7 @@ class Network(nn.Module):
             s0 = s1 = self.stem(input)
         for i, cell in enumerate(self.cells):
             s0, s1 = s1, cell(s0, s1)
+            print("----- size of cells output: ", s0.shape, s1.shape)
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
         return logits
