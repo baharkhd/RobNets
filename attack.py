@@ -15,7 +15,8 @@ class AttackPGD(nn.Module):
 
     def forward(self, inputs, targets):
         if not self.attack:
-            return self.model(inputs), inputs
+            logits, fsps = self.model(inputs)
+            return logits, fsps, inputs
 
         x = inputs.detach()
         if self.rand:
@@ -31,4 +32,5 @@ class AttackPGD(nn.Module):
             x = torch.min(torch.max(x, inputs - self.epsilon), inputs + self.epsilon)
             x = torch.clamp(x, 0, 1)
 
-        return self.model(x), x
+        #return self.model(x), x
+        return logits, fsps, x
