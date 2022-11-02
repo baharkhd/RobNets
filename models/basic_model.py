@@ -108,14 +108,33 @@ class Network(nn.Module):
             self.global_pooling = nn.AdaptiveAvgPool2d(AdPoolSize)
         self.classifier = nn.Linear(C_prev, num_classes)
 
+    @staticmethod
+    def compute_fsp_matrix(first_feature_map, second_feature_map):
+        first_h, first_w = first_feature_map.shape[2:4]
+        second_h, second_w = second_feature_map.shape[2:4]
+        target_h, target_w = min(first_h, second_h), min(first_w, second_w)
+        if first_h > target_h or first_w > target_w:
+            first_feature_map = F.adaptive_max_pool2d(first_feature_map, (target_h, target_w))
+
+        if second_h > target_h or second_w > target_w:
+            second_feature_map = F.adaptive_max_pool2d(second_feature_map, (target_h, target_w))
+
+        first_feature_map = first_feature_map.flatten(2)
+        second_feature_map = second_feature_map.flatten(2)
+        hw = first_feature_map.shape[2]
+        return torch.matmul(first_feature_map, second_feature_map.transpose(1, 2)) / hw
+
+
     def forward(self, input):
         if self._ImgNetBB:
             s0 = self.stem0(input)
             s1 = self.stem1(s0)
         else:
             s0 = s1 = self.stem(input)
+        fsps = []
         for i, cell in enumerate(self.cells):
             s0, s1 = s1, cell(s0, s1)
+            fsps += [self.compute_fsp_matrix(s0, s1)]
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
-        return logits
+        return logits, fsps
