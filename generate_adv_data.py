@@ -60,8 +60,15 @@ def test(net, net_adv, testloader, adv=False):
             outputs, fsps = net(inputs)
             adv_outputs, adv_fsps, inputs_adv = net_adv(inputs, targets)
 
-            print("----", outputs.shape, adv_outputs.shape)
-            print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
+            fsps_losses = list()
+            for fsp, adv_fsp in zip(fsps, adv_fsps):
+                fsps_losses.append((fsp - adv_fsp).norm(dim=(1,2)))
+            
+
+
+            print("??????", type(fsps_losses), type(fsps_losses[0]), fsps_losses[0].shape)
+            #print("----", outputs.shape, adv_outputs.shape)
+            #print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
 
 
