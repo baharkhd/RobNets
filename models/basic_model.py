@@ -131,6 +131,7 @@ class Network(nn.Module):
             s1 = self.stem1(s0)
         else:
             s0 = s1 = self.stem(input)
+
         fsps = []
         for i, cell in enumerate(self.cells):
             s0, s1 = s1, cell(s0, s1)
