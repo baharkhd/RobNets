@@ -43,7 +43,7 @@ criterion = nn.CrossEntropyLoss()
 #print()
 #print(bin_archs[0])
 
-def test(net, testloader, adv=False):
+def test(net, net_adv, testloader, adv=False):
     losses = utils.AverageMeter(0)
     top1 = utils.AverageMeter(0)
     top5 = utils.AverageMeter(0)
@@ -58,7 +58,7 @@ def test(net, testloader, adv=False):
 
             # here I think we should calculate the FSP of different cells
             outputs, fsps = net(inputs)
-            adv_outputs, adv_fsps, inputs_adv = net(inputs, targets)
+            adv_outputs, adv_fsps, inputs_adv = net_adv(inputs, targets)
 
             print("----", outputs.shape, adv_outputs.shape)
             print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
@@ -76,7 +76,7 @@ def test_architecture(arch_code, test_loader):
     net_adv = AttackPGD(net, cfg.attack_param)
 
     print('==> Testing on Clean Data..')
-    test(net, test_loader)
+    test(net, net_adv, test_loader)
     #print('==> Testing on Adversarial Data..')
     #test(net_adv, test_loader, adv=True)
 
