@@ -69,7 +69,7 @@ def test(net, net_adv, testloader, adv=False):
             if len(all_fsp_losses) == 0:
                 all_fsp_losses = fsps_losses
             else:
-                all_fsp_losses = [all_fsp_losses[i] + fsps_losses for i in range(len(fsps_losses))]
+                all_fsp_losses = [all_fsp_losses[i] + fsps_losses[i] for i in range(len(fsps_losses))]
 
 
             print("??????", type(all_fsp_losses), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_losses[0]), fsps_losses[0].shape, all_fsp_losses[0].shape)
