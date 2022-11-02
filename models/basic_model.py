@@ -134,7 +134,8 @@ class Network(nn.Module):
         fsps = []
         for i, cell in enumerate(self.cells):
             s0, s1 = s1, cell(s0, s1)
+            print("----- s0.shape: {} , s1.shape; {}".format(s0.shape, s1.shape))
             fsps += [self.compute_fsp_matrix(s0, s1)]
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
-        return logits, fsps
+        return logits
