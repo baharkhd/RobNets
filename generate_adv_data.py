@@ -60,7 +60,7 @@ def test(net, testloader, adv=False):
             if not adv:
                 outputs, fsps = net(inputs)
                 print("----", outputs.shape)
-                print("++++", type(fsps), len(fsps))
+                print("++++", type(fsps), len(fsps), fsps[0].shape)
             else:
                 outputs, inputs_adv = net(inputs, targets)
 
