@@ -58,7 +58,9 @@ def test(net, testloader, adv=False):
 
             # here I think we should calculate the FSP of different cells
             if not adv:
-                outputs = net(inputs)
+                outputs, fsps = net(inputs)
+                print("----", outputs.shape)
+                print("++++", type(fsps), len(fsps))
             else:
                 outputs, inputs_adv = net(inputs, targets)
 
@@ -95,6 +97,7 @@ def test(net, testloader, adv=False):
 
     #return final_top1
 
+
 def test_architecture(arch_code, test_loader):
 
     #arch_code = eval(arch_code)
@@ -107,8 +110,8 @@ def test_architecture(arch_code, test_loader):
 
     print('==> Testing on Clean Data..')
     test(net, test_loader)
-    print('==> Testing on Adversarial Data..')
-    test(net_adv, test_loader, adv=True)
+    #print('==> Testing on Adversarial Data..')
+    #test(net_adv, test_loader, adv=True)
 
 
 def generate_adv_data():
@@ -128,6 +131,7 @@ def generate_adv_data():
     #architecture = bin_archs[0]
     for arch in tqdm(bin_archs):
         test_architecture(arch, testloader)
+        break
     
 
 generate_adv_data()
