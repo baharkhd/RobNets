@@ -139,4 +139,4 @@ class Network(nn.Module):
             fsps += [self.compute_fsp_matrix(s0, s1)]
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
-        return logits
+        return logits, fsps
