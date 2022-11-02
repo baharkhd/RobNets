@@ -23,7 +23,7 @@ class AttackPGD(nn.Module):
         for i in range(self.num_steps):
             x.requires_grad_()
             with torch.enable_grad():
-                logits = self.model(x)
+                logits, fsps = self.model(x)
                 loss = F.cross_entropy(logits, targets, size_average=False)
             grad = torch.autograd.grad(loss, [x])[0]
             # print(grad)

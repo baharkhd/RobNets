@@ -57,45 +57,12 @@ def test(net, testloader, adv=False):
             inputs, targets = inputs.cuda(), targets.cuda()
 
             # here I think we should calculate the FSP of different cells
-            if not adv:
-                outputs, fsps = net(inputs)
-                print("----", outputs.shape)
-                print("++++", type(fsps), len(fsps), fsps[0].shape)
-            else:
-                outputs, inputs_adv = net(inputs, targets)
+            outputs, fsps = net(inputs)
+            adv_outputs, adv_fsps, inputs_adv = net(inputs, targets)
 
-            #loss = criterion(outputs, targets)
-            #prec1, prec5 = utils.accuracy(outputs.data, targets, topk=(1, 5))
+            print("----", outputs.shape, adv_outputs.shape)
+            print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
-            #num = inputs.size(0)
-            #losses.update(loss.clone().item(), num)
-            #top1.update(prec1.clone().item(), num)
-            #top5.update(prec5.clone().item(), num)
-            
-            #if batch_idx % cfg.report_freq == 0 and rank == 0:
-            #    logger.info(
-            #        'Test: [{0}/{1}]\t'
-		    #'Loss: {loss.val:.4f} ({loss.avg:.4f})\t'
-		    #'Prec@1: {top1.val:.3f} ({top1.avg:.3f})\t'
-		    #'Prec@5: {top5.val:.3f} ({top5.avg:.3f})\t'
-            #        .format(batch_idx, len(testloader), loss=losses, top1=top1, top5=top5))
-
-    #final_loss_sum = torch.Tensor([losses.sum]).cuda()
-    #final_top1_sum = torch.Tensor([top1.sum]).cuda()
-    #final_top5_sum = torch.Tensor([top5.sum]).cuda()
-    #total_num = torch.Tensor([losses.count]).cuda()
-    #if args.distributed:
-    #    torch.distributed.all_reduce(final_loss_sum)
-    #    torch.distributed.all_reduce(final_top1_sum)
-    #    torch.distributed.all_reduce(final_top5_sum)
-    #    torch.distributed.all_reduce(total_num)
-    #final_loss = final_loss_sum.item() / total_num.item()
-    #final_top1 = final_top1_sum.item() / total_num.item()
-    #final_top5 = final_top5_sum.item() / total_num.item()
-
-    #logger.info(' * Prec@1 {:.3f}\tPrec@5 {:.3f}\tLoss {:.3f}\t'.format(final_top1, final_top5, final_loss))
-
-    #return final_top1
 
 
 def test_architecture(arch_code, test_loader):
