@@ -52,6 +52,8 @@ def test(net, net_adv, testloader, adv=False):
 
     net.eval()
 
+    all_fsp_losses = list()
+
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
             inputs, targets = inputs.cuda(), targets.cuda()
@@ -64,9 +66,13 @@ def test(net, net_adv, testloader, adv=False):
             for fsp, adv_fsp in zip(fsps, adv_fsps):
                 fsps_losses.append((fsp - adv_fsp).norm(dim=(1,2)))
             
+            if len(all_fsp_losses) == 0:
+                all_fsp_losses = fsps_losses
+            else:
+                all_fsp_losses = [all_fsp_losses[i] + fsps_losses for i in range(len(fsps_losses))]
 
 
-            print("??????", type(fsps_losses), type(fsps_losses[0]), fsps_losses[0].shape)
+            print("??????", type(all_fsp_losses), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_losses[0]), fsps_losses[0].shape, all_fsp_losses[0].shape)
             #print("----", outputs.shape, adv_outputs.shape)
             #print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
