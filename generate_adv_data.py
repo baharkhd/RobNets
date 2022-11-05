@@ -21,7 +21,6 @@ import utils
 import lr_scheduler
 from tqdm import tqdm
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', '-c', type=str, default='./experiments/RobNet_free_cifar10/config.py',
                     help='location of the config file')
@@ -38,10 +37,11 @@ bin_archs = np.load(bin_archs_path).tolist()
 
 criterion = nn.CrossEntropyLoss()
 
-#print(archs.shape, bin_archs.shape)
-#print(archs[0])
-#print()
-#print(bin_archs[0])
+
+# print(archs.shape, bin_archs.shape)
+# print(archs[0])
+# print()
+# print(bin_archs[0])
 
 def test(net, net_adv, testloader, adv=False):
     losses = utils.AverageMeter(0)
@@ -66,37 +66,35 @@ def test(net, net_adv, testloader, adv=False):
 
             fsps_losses = list()
             for fsp, adv_fsp in zip(fsps, adv_fsps):
-                fsps_losses.append((fsp - adv_fsp).norm(dim=(1,2)).sum())
+                fsps_losses.append((fsp - adv_fsp).norm(dim=(1, 2)).sum())
 
             if len(all_fsp_sum) == 0:
                 all_fsp_sum = fsps_losses
             else:
                 all_fsp_sum = [all_fsp_sum[i] + fsps_losses[i] for i in range(len(fsps_losses))]
 
-
-            print("??????", type(all_fsp_sum), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_sum[0]), fsps_losses[0].shape, all_fsp_sum[0].shape)
-            #print("----", outputs.shape, adv_outputs.shape)
-            #print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
+            print("??????", type(all_fsp_sum), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_sum[0]),
+                  fsps_losses[0].shape, all_fsp_sum[0].shape)
+            # print("----", outputs.shape, adv_outputs.shape)
+            # print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
         all_fsp_losses = [all_fsp_sum[i] / data_num for i in range(len(all_fsp_sum))]
         print("**** final:", len(all_fsp_losses), data_num)
 
 
-
 def test_architecture(arch_code, test_loader):
-
-    #arch_code = eval(arch_code)
+    # arch_code = eval(arch_code)
     net = models.model_entry(cfg, arch_code)
     net = net.cuda()
-    #print("------", arch_code)
-    #print()
+    # print("------", arch_code)
+    # print()
 
     net_adv = AttackPGD(net, cfg.attack_param)
 
     print('==> Testing on Clean Data..')
     test(net, net_adv, test_loader)
-    #print('==> Testing on Adversarial Data..')
-    #test(net_adv, test_loader, adv=True)
+    # print('==> Testing on Adversarial Data..')
+    # test(net_adv, test_loader, adv=True)
 
 
 def generate_adv_data():
@@ -113,10 +111,10 @@ def generate_adv_data():
     print('==> Preparing data..')
     testloader = dataset_entry(cfg, args.distributed, args.eval_only)
 
-    #architecture = bin_archs[0]
+    # architecture = bin_archs[0]
     for arch in tqdm(bin_archs):
         test_architecture(arch, testloader)
         break
-    
+
 
 generate_adv_data()
