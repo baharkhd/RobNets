@@ -54,8 +54,10 @@ def test(net, net_adv, testloader, adv=False):
 
     all_fsp_sum = list()
 
+    data_num = 0
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
+            data_num += inputs.shape[0]
             inputs, targets = inputs.cuda(), targets.cuda()
 
             # here I think we should calculate the FSP of different cells
@@ -75,6 +77,9 @@ def test(net, net_adv, testloader, adv=False):
             print("??????", type(all_fsp_sum), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_sum[0]), fsps_losses[0].shape, all_fsp_sum[0].shape)
             #print("----", outputs.shape, adv_outputs.shape)
             #print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
+
+        all_fsp_losses = [all_fsp_sum[i] / data_num for i in range(len(all_fsp_sum))]
+        print("**** final:", len(all_fsp_losses), data_num)
 
 
 
