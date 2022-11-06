@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 import torch.backends.cudnn as cudnn
 
@@ -66,7 +68,7 @@ def test(net, net_adv, testloader, adv=False):
 
             fsps_losses = list()
             for fsp, adv_fsp in zip(fsps, adv_fsps):
-                fsps_losses.append((fsp - adv_fsp).norm(dim=(1, 2)).sum())
+                fsps_losses.append((fsp - adv_fsp).norm(dim=(1, 2)).sum().item())
 
             if len(all_fsp_sum) == 0:
                 all_fsp_sum = fsps_losses
@@ -80,6 +82,7 @@ def test(net, net_adv, testloader, adv=False):
 
         all_fsp_losses = [all_fsp_sum[i] / data_num for i in range(len(all_fsp_sum))]
         print("**** final:", len(all_fsp_losses), data_num)
+        return all_fsp_losses
 
 
 def test_architecture(arch_code, test_loader):
@@ -92,7 +95,7 @@ def test_architecture(arch_code, test_loader):
     net_adv = AttackPGD(net, cfg.attack_param)
 
     print('==> Testing on Clean Data..')
-    test(net, net_adv, test_loader)
+    return test(net, net_adv, test_loader)
     # print('==> Testing on Adversarial Data..')
     # test(net_adv, test_loader, adv=True)
 
@@ -112,8 +115,20 @@ def generate_adv_data():
     testloader = dataset_entry(cfg, args.distributed, args.eval_only)
 
     # architecture = bin_archs[0]
+    arch_tuples = []
+    with open('fsp_losses.pickle', 'wb') as f:
+        pickle.dump(arch_tuples, f)
+
     for arch in tqdm(bin_archs):
-        test_architecture(arch, testloader)
+        arch_fsps = test_architecture(arch, testloader)
+
+        with open('fsp_losses.pickle', 'rb') as f:
+            arch_tuples = pickle.load(f)
+
+        arch_tuples += [(arch, arch_fsps)]
+
+        with open('fsp_losses.pickle', 'wb') as f:
+            pickle.dump(arch_tuples, f)
         break
 
 
