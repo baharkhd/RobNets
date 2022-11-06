@@ -129,7 +129,6 @@ def generate_adv_data():
         with open('fsp_losses.pickle', 'wb') as f:
             pickle.dump(arch_tuples, f)
             print("changes saved in pickle file!")
-        break
 
 
 generate_adv_data()
