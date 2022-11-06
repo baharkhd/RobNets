@@ -75,8 +75,7 @@ def test(net, net_adv, testloader, adv=False):
             else:
                 all_fsp_sum = [all_fsp_sum[i] + fsps_losses[i] for i in range(len(fsps_losses))]
 
-            print("??????", type(all_fsp_sum), type(fsps_losses), type(fsps_losses[0]), type(all_fsp_sum[0]),
-                  fsps_losses[0].shape, all_fsp_sum[0].shape)
+            print("----", all_fsp_sum, fsps_losses)
             # print("----", outputs.shape, adv_outputs.shape)
             # print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
