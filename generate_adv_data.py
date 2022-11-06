@@ -59,10 +59,11 @@ def test(net, net_adv, testloader, adv=False):
     data_num = 0
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
+            print(f"batch index: #{batch_idx + 1}")
+
             data_num += inputs.shape[0]
             inputs, targets = inputs.cuda(), targets.cuda()
 
-            # here I think we should calculate the FSP of different cells
             outputs, fsps = net(inputs)
             adv_outputs, adv_fsps, inputs_adv = net_adv(inputs, targets)
 
@@ -74,10 +75,6 @@ def test(net, net_adv, testloader, adv=False):
                 all_fsp_sum = fsps_losses
             else:
                 all_fsp_sum = [all_fsp_sum[i] + fsps_losses[i] for i in range(len(fsps_losses))]
-
-            print("----", all_fsp_sum, fsps_losses)
-            # print("----", outputs.shape, adv_outputs.shape)
-            # print("++++", type(fsps) ,type(adv_fsps), len(fsps), len(adv_fsps), fsps[0].shape, adv_fsps[0].shape)
 
         all_fsp_losses = [all_fsp_sum[i] / data_num for i in range(len(all_fsp_sum))]
         print("**** final:", len(all_fsp_losses), data_num)
@@ -117,8 +114,11 @@ def generate_adv_data():
     arch_tuples = []
     with open('fsp_losses.pickle', 'wb') as f:
         pickle.dump(arch_tuples, f)
+        print("pickle file created!")
 
-    for arch in tqdm(bin_archs):
+    for i, arch in enumerate(tqdm(bin_archs)):
+        print(f"binary arch: #{i + 1}")
+
         arch_fsps = test_architecture(arch, testloader)
 
         with open('fsp_losses.pickle', 'rb') as f:
@@ -128,6 +128,7 @@ def generate_adv_data():
 
         with open('fsp_losses.pickle', 'wb') as f:
             pickle.dump(arch_tuples, f)
+            print("changes saved in pickle file!")
         break
 
 
